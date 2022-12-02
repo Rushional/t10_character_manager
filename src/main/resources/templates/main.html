@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Task 10: Character Manager</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+
+<h1>The stats for the character:</h1>
+<!--
+I'm pretty sure this is a terrible way to do it for 3 reasons:
+   1) I'm basically repeating myself, making so many samey labels. There is definitely a way not to.
+   2) I'm also repeating myself again, wrtiting "<b>Spellbook:</b> " here and then later, again.
+   3) This whole way of making labels first and then overriding their contents later sounds fishy.
+   I'm really not sure if this is a good way to do it.
+
+But! This is intended. My goal isn't to write good JavaScript here. My goal is to write fast and functional
+JavaScript that will let me see my backend code in action. I'm not a frontender, like, at all,
+and I don't want to be.
+
+So learning to do any of this better is mostly a waste of time. I'm making this project to practice
+using Spring, making REST controllers, making a copy constructor vs using Cloneable interface.
+So yeah, this code is intentionally bad, but all's good!
+-->
+<p id="about"><b>About:</b> </p>
+<p id="spellbook"><b>Spellbook:</b> </p>
+<p id="inventory"><b>Inventory:</b> </p>
+<p id="notes"><b>Notes:</b> </p>
+<p></p>
+<p id="feats"><b>Feats:</b> </p>
+
+<p id="strength"><b>Strength:</b> </p>
+<p id="dexterity"><b>Dexterity:</b> </p>
+<p id="constitution"><b>Constitution:</b> </p>
+<p id="intelligence"><b>Intelligence:</b> </p>
+<p id="wisdom"><b>Wisdom:</b> </p>
+<p id="charisma"><b>Charisma:</b> </p>
+<p id="skills"><b>Skills:</b> </p>
+<p id="saveThrows"><b>Saving Throws:</b> </p>
+<p id="defence"><b>Defence:</b> </p>
+<p id="proficiencies"><b>Proficiencies:</b> </p>
+
+<button id="editButton">Edit</button>
+<button id="prevButton">Previous version</button>
+<button id="nextButton" disabled>Next version</button>
+
+
+<script th:inline="javascript">
+    let aboutLabel = document.getElementById("about");
+    let spellbookLabel = document.getElementById("spellbook");
+    let inventoryLabel = document.getElementById("inventory");
+    let notesLabel = document.getElementById("notes");
+    let featsLabel = document.getElementById("feats");
+    let strengthLabel = document.getElementById("strength");
+    let dexterityLabel = document.getElementById("dexterity");
+    let constitutionLabel = document.getElementById("constitution");
+    let intelligenceLabel = document.getElementById("intelligence");
+    let wisdomLabel = document.getElementById("wisdom");
+    let charismaLabel = document.getElementById("charisma");
+    let skillsLabel = document.getElementById("skills");
+    let saveThrowsLabel = document.getElementById("saveThrows");
+    let defenceLabel = document.getElementById("defence");
+    let proficienciesLabel = document.getElementById("proficiencies");
+
+    let editButton = document.getElementById("editButton");
+    let prevButton = document.getElementById("prevButton");
+    let nextButton = document.getElementById("nextButton");
+
+    function loadCharacter() {
+        fetch("/character", {method: "GET"})
+            .then(response => response.json())
+            .then(character => outputToPage(character))
+        ;
+    }
+
+    function outputToPage(character) {
+        console.log(character);
+        aboutLabel.innerHTML = '<b>About:</b> ' + character.about;
+        spellbookLabel.innerHTML = '<b>Spellbook:</b> ' + character.spellbook;
+        inventoryLabel.innerHTML = '<b>Inventory:</b> ' + character.inventory;
+        notesLabel.innerHTML = '<b>Notes:</b> ' + character.notes;
+
+        var featsString = '';
+        var featsList = character.feats.featsList;
+        var featsAmount = featsList.length;
+        for (let i = 0; i < featsAmount - 1; i++) {
+            featsString = featsString + featsList[i] + ', ';
+        }
+        featsString = featsString + featsList[featsAmount - 1];
+
+        featsLabel.innerHTML = '<b>Feats:</b> ' + featsString;
+        strengthLabel.innerHTML = '<b>Strength:</b> ' + character.stats.strength;
+        dexterityLabel.innerHTML = '<b>Dexterity:</b> ' + character.stats.dexterity;
+        constitutionLabel.innerHTML = '<b>Constitution:</b> ' + character.stats.constitution;
+        intelligenceLabel.innerHTML = '<b>Intelligence:</b> ' + character.stats.intelligence;
+        wisdomLabel.innerHTML = '<b>Wisdom:</b> ' + character.stats.wisdom;
+        charismaLabel.innerHTML = '<b>Charisma:</b> ' + character.stats.charisma;
+        skillsLabel.innerHTML = '<b>Skills:</b> ' + character.stats.skills;
+        saveThrowsLabel.innerHTML = '<b>Saving Throws:</b> ' + character.stats.saveThrows;
+        defenceLabel.innerHTML = '<b>Defence:</b> ' + character.stats.defence;
+        proficienciesLabel.innerHTML = '<b>Proficiencies:</b> ' + character.stats.proficiencies;
+    }
+
+    window.onload = () => {
+        loadCharacter();
+    };
+
+    // editButton.onclick = () => loadCharacter();
+    // prevButton.onclick = () => loadCharacter();
+    // nextButton.onclick = () => loadCharacter();
+</script>
+
+</body>
+</html>
